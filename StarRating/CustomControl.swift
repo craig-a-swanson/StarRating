@@ -37,6 +37,7 @@ class CustomControl: UIControl {
             } else {
                 newLabel.textColor = componentInactiveColor
             }
+            addSubview(newLabel)
             starArray.append(newLabel)
         }
     }
