@@ -17,7 +17,7 @@
                         <subviews>
                             <view verifyAmbiguity="ignoreSizes" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fmD-2Y-7Ex" customClass="CustomControl" customModule="StarRating" customModuleProvider="target">
                                 <rect key="frame" x="87" y="513" width="240" height="128"/>
-                                <color key="backgroundColor" red="0.92940626780000002" green="0.9770856832" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="updateRating:" destination="BYZ-38-t0r" eventType="valueChanged" id="yAZ-Ce-rXg"/>
                                 </connections>
