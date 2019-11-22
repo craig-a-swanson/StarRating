@@ -50,7 +50,6 @@ class CustomControl: UIControl {
     }
     
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-//        let touchPoint = touch.location(in: self)
         updateValue(at: touch)
         sendActions(for: .touchDown)
         
@@ -99,11 +98,26 @@ class CustomControl: UIControl {
         
         for star in starArray {
             if star.frame.contains(touchPoint) {
+                if star.tag == value {
+                    return
+                } else {
                 value = star.tag
                 setup()
+                    star.performFlare()
                 sendActions(for: .valueChanged)
+                }
             }
         }
     }
-    
+}
+
+extension UIView {
+    func performFlare() {
+      func flare()   { transform = CGAffineTransform(scaleX: 1.6, y: 1.6) }
+      func unflare() { transform = .identity }
+      
+      UIView.animate(withDuration: 0.3,
+                     animations: { flare() },
+                     completion: { _ in UIView.animate(withDuration: 0.1) { unflare() }})
+    }
 }
