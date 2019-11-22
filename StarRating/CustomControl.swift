@@ -11,6 +11,7 @@ import UIKit
 
 class CustomControl: UIControl {
     
+    // MARK: Properties
     var value: Int = 1
     var starArray: [UILabel] = []
     
@@ -25,6 +26,9 @@ class CustomControl: UIControl {
         setup()
     }
     
+    // MARK: - Methods
+    // setup will return the starArray to empty if it is populated and rebuild it.
+    // it loops through the arrray and sets each of the five labels and appends them to the array.
     func setup() {
         starArray = []
         for n in stride(from: CGFloat(1), through: CGFloat(5), by: 1) {
@@ -42,6 +46,8 @@ class CustomControl: UIControl {
             starArray.append(newLabel)
         }
     }
+    
+    // set the size of the UIView based on the size of the labels
     override var intrinsicContentSize: CGSize {
         let componentsWidth = CGFloat(componentCount) * componentDimension
         let componentsSpacing = CGFloat(componentCount + 1) * 8.0
@@ -49,6 +55,28 @@ class CustomControl: UIControl {
         return CGSize(width: width, height: componentDimension)
     }
     
+    // updateValue takes the touch from the tracking functions.
+    // it compares the tag ID of the label touched to the current value variable.
+    // if the tag is different than value, value is set to the current tag and the setup function is called to rebuild the array.
+    private func updateValue(at touch: UITouch) {
+        let touchPoint = touch.location(in: self)
+        
+        for star in starArray {
+            if star.frame.contains(touchPoint) {
+                if star.tag == value {
+                    return
+                } else {
+                    value = star.tag
+                    setup()
+                    star.performFlare()
+                    sendActions(for: .valueChanged)
+                }
+            }
+        }
+    }
+    
+    
+    // MARK: - Tracking Functions
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         updateValue(at: touch)
         sendActions(for: .touchDown)
@@ -74,7 +102,6 @@ class CustomControl: UIControl {
             super.endTracking(touch, with: event)
         }
         guard let touch = touch else { return }
-        
         let touchPoint = touch.location(in: self)
         
         if self.bounds.contains(touchPoint) {
@@ -92,25 +119,9 @@ class CustomControl: UIControl {
         
         sendActions(for: .touchCancel)
     }
-    
-    private func updateValue(at touch: UITouch) {
-        let touchPoint = touch.location(in: self)
-        
-        for star in starArray {
-            if star.frame.contains(touchPoint) {
-                if star.tag == value {
-                    return
-                } else {
-                value = star.tag
-                setup()
-                    star.performFlare()
-                sendActions(for: .valueChanged)
-                }
-            }
-        }
-    }
 }
 
+// animation performed when label is touched
 extension UIView {
     func performFlare() {
       func flare()   { transform = CGAffineTransform(scaleX: 1.6, y: 1.6) }
