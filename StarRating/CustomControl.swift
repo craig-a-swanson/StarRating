@@ -12,6 +12,7 @@ import UIKit
 class CustomControl: UIControl {
     
     var value: Int = 1
+    var starArray: [UILabel] = []
     
     private let componentDimension: CGFloat = 40.0
     private let componentCount: Int = 5
@@ -25,14 +26,14 @@ class CustomControl: UIControl {
     }
     
     func setup() {
-        var starArray: [UILabel] = []
+        starArray = []
         for n in stride(from: CGFloat(1), through: CGFloat(5), by: 1) {
             let newLabel = UILabel(frame: CGRect(x: (n * 8) + (componentDimension * (n - 1)), y: 0, width: componentDimension, height: componentDimension))
             newLabel.tag = Int(n)
             newLabel.font = .systemFont(ofSize: 32.0, weight: .bold)
             newLabel.text = "✩"
             newLabel.textAlignment = .center
-            if n == 1 {
+            if n <= CGFloat(value) {
                 newLabel.textColor = componentActiveColor
             } else {
                 newLabel.textColor = componentInactiveColor
@@ -49,7 +50,7 @@ class CustomControl: UIControl {
     }
     
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        let touchPoint = touch.location(in: self)
+//        let touchPoint = touch.location(in: self)
         updateValue(at: touch)
         sendActions(for: .touchDown)
         
@@ -73,6 +74,16 @@ class CustomControl: UIControl {
         defer {
             super.endTracking(touch, with: event)
         }
+        guard let touch = touch else { return }
+        
+        let touchPoint = touch.location(in: self)
+        
+        if self.bounds.contains(touchPoint) {
+            updateValue(at: touch)
+            sendActions(for: [.touchUpInside, .valueChanged])
+        } else {
+            sendActions(for: .touchUpOutside)
+        }
     }
     
     override func cancelTracking(with event: UIEvent?) {
@@ -84,7 +95,15 @@ class CustomControl: UIControl {
     }
     
     private func updateValue(at touch: UITouch) {
+        let touchPoint = touch.location(in: self)
         
+        for star in starArray {
+            if star.frame.contains(touchPoint) {
+                value = star.tag
+                setup()
+                sendActions(for: .valueChanged)
+            }
+        }
     }
     
 }
